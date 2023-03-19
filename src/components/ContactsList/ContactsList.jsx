@@ -1,37 +1,18 @@
-import { Contact } from './Contact/Contact';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectFilteredContacts, selectIsLoading } from 'redux/selectors';
-import { deleteContact } from 'redux/contacts/contactsThunk';
 import css from './ContactsList.module.css';
-import Loader from 'components/Loader/Loader';
+import Contact  from './Contact/Contact';
+import { useSelector } from 'react-redux';
+import { getFilteredContacts } from '../../redux/selectors';
 
-export const ContactsList = () => {
-  const dispatch = useDispatch();
 
-  const handleDeleteContact = id => {
-    dispatch(deleteContact(id));
-  };
-
-  const contactListToDisplay = useSelector(selectFilteredContacts);
-  const isLoading = useSelector(selectIsLoading);
-
+const ContactsList = () => {
+  const filteredContacts = useSelector(getFilteredContacts);
   return (
-    <>
-      {isLoading ? (
-        <Loader />
-      ) : !contactListToDisplay.length ? (
-        <p>No contacts to display</p>
-      ) : (
-        <ul className={css.contactsList}>
-          {contactListToDisplay.map(item => (
-            <Contact
-              key={item.id}
-              contact={item}
-              onDelete={handleDeleteContact}
-            />
-          ))}
-        </ul>
-      )}
-    </>
+    <ul className={css.contacts}>
+      {filteredContacts.map(({ id, name, number }) => {
+        return <Contact key={id} name={name} phone={number} id={id} />;
+      })}
+    </ul>
   );
 };
+
+export default ContactsList;

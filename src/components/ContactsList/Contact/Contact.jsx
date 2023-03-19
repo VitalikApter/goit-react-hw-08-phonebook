@@ -1,27 +1,38 @@
-import { PropTypes } from 'prop-types';
 import css from './Contact.module.css';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from 'redux/contactsOperations';
+import { getIsLoading } from '../../../redux/selectors';
 
-export const Contact = ({ contact: { id, name, number }, onDelete }) => {
-  const handleClick = () => onDelete(id);
+const ContactItem = ({ id, name, phone }) => {
+  const dispatch = useDispatch();
+
+  const isLoading = useSelector(getIsLoading);
+  const onDelete = id => {
+    dispatch(deleteContact(id));
+  };
 
   return (
-    <li className={css.listItem}>
-      <ul className={css.listItem}>
-        <p>{name}:</p>
-        <p>{number}</p>
-      </ul>
-      <button type="button" onClick={handleClick}>
+    <li className={css.li}>
+      <p>
+        {name}: {phone}
+      </p>
+      <button
+        className={css.button}
+        type="button"
+        onClick={() => onDelete(id)}
+        disabled={isLoading}
+      >
         Delete
       </button>
     </li>
   );
 };
 
-Contact.propTypes = {
-  contact: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    number: PropTypes.string.isRequired,
-  }),
-  onDelete: PropTypes.func.isRequired,
+export default ContactItem;
+
+ContactItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  phone: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
 };

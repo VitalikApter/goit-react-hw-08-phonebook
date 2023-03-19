@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { authReduser } from './auth/authSlice';
-import { contactsReducer } from './contacts/contactsSlice';
-import { filterReducer } from './filter/filterSlice';
-import { rootInitialState } from './rootInitialState';
+import { contactReducer } from './contactsSlice';
+import { filterReducer } from './filtersSlice';
+import { authReducer } from './auth/authSlice';
 import {
+  persistStore,
+  persistReducer,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -11,23 +12,26 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import persistStore from 'redux-persist/es/persistStore';
-import { profileReducer } from './profile/profileSlice';
+import storage from 'redux-persist/lib/storage';
+
+const authPersistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['token'],
+};
 
 export const store = configureStore({
-  preloadedState: rootInitialState,
-  devTools: true,
   reducer: {
-    contacts: contactsReducer,
+    auth: persistReducer(authPersistConfig, authReducer),
+    contacts: contactReducer,
     filter: filterReducer,
-    auth: authReduser,
-    profile: profileReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
+      devTools: process.env.NODE_ENV === 'development',
     }),
 });
 

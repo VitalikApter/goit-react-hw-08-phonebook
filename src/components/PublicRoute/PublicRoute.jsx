@@ -1,8 +1,21 @@
-import { useSelector } from 'react-redux';
-import { Navigate, Outlet } from 'react-router-dom';
-import { selectAuthToken } from 'redux/auth/authSelectors';
 
-export const PublicRoute = () => {
-  const token = useSelector(selectAuthToken);
-  return token ? <Navigate to="/phonebook" replace /> : <Outlet />;
+
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from 'hooks/useAuth';
+import Loader from 'components/Loader/Loader';
+
+const PublicRoute = () => {
+  const { isLoggedIn, token } = useAuth();
+
+  if (!isLoggedIn && token) {
+    return <Loader />;
+  }
+
+  if (isLoggedIn) {
+    return <Navigate to="/contacts" />;
+  }
+
+  return <Outlet />;
 };
+
+export default PublicRoute;

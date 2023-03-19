@@ -1,36 +1,25 @@
-import { Section } from 'components/Section/Section';
-import { PhoneBookForm } from 'components/PhoneBookForm/PhoneBookForm';
-import { ContactsList } from 'components/ContactsList/ContactsList';
-import { FilterByName } from 'components/FilterByName/FilterByName';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts } from 'redux/selectors';
-import { fetchContacts } from 'redux/contacts/contactsThunk';
+import css from './Phonebook.module.css';
+import  ContactsList  from 'components/ContactsList/ContactsList';
+import AddForm from 'components/PhoneBookForm/PhoneBookForm';
+import Filter  from 'components/Filter/Filter';
+import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import Header from 'components/Header/Header';
+import { fetchContacts } from 'redux/contactsOperations';
 
-export const PhoneApp = () => {
+export default function PhoneApp() {
   const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
 
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
-
   return (
-    <>
-      <Header />
-      <Section title="Add contact">
-        <PhoneBookForm />
-      </Section>
-
-      {!!contacts.length && (
-        <Section>
-          <FilterByName />
-        </Section>
-      )}
-      <Section title="ContactsList">
+      <div className={css.container}>
+        <h1 className={css.title}>Phonebook</h1>
+        <AddForm />
+        <h2  className={css.title}>Contacts</h2>
+        <Filter />
         <ContactsList />
-      </Section>
-    </>
+      </div>
   );
-};
+}
+
