@@ -3,11 +3,10 @@ import { PhoneBookForm } from 'components/PhoneBookForm/PhoneBookForm';
 import { ContactsList } from 'components/ContactsList/ContactsList';
 import { FilterByName } from 'components/FilterByName/FilterByName';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts } from 'components/redux/selectors';
-import { fetchContacts } from 'components/redux/contacts/contactsThunk';
+import { selectContacts } from 'redux/selectors';
+import { fetchContacts } from 'redux/contacts/contactsThunk';
 import { useEffect } from 'react';
-
-
+import Header from 'components/Header/Header';
 
 export const PhoneApp = () => {
   const dispatch = useDispatch();
@@ -19,8 +18,8 @@ export const PhoneApp = () => {
 
   return (
     <>
-   
-      <Section title="Phonebook">
+      <Header />
+      <Section title="Add contact">
         <PhoneBookForm />
       </Section>
 
